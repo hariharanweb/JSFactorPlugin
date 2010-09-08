@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="hari.jsfactor.ui.JSFactor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            default="true"
+            extensions="js"
+            id="hari.jsfactor.ui.JSFactor"
+            name="JSFactor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+   </extension>
+
+</plugin>
