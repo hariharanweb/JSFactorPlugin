@@ -11,6 +11,14 @@ public class JSFunctionTest {
 		Assert.assertEquals(0, jsFunction.getParameters().size());
 		
 	}
+	
+	@Test
+	public void testParsingOfFunctionAsVariable() throws Exception {
+		JSFunction jsFunction = JSFunction.getJSFunctionFromVariable("var test = function(a,b,c)", 0, 0);
+		Assert.assertEquals("test", jsFunction.getFunctionName());
+		Assert.assertEquals(0, jsFunction.getParameters().size());
+		
+	}
 
 	@Test
 	public void testParsingOfFunctionWithParameters() throws Exception {

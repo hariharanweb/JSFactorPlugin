@@ -10,6 +10,7 @@ public interface IJSFactorContants {
 	String JS_OPERATOR = "JS_OPERATOR";
 	String JS_FUNCTION = "JS_FUNCTION";
 	String JS_OPEN_CURLY_BRACES = "JS_OPEN_CURLY_BRACES";
+	String JS_VARIABLE = "JS_VARIABLE";
 	
 	String[] contentTypes = new String[] { IDocument.DEFAULT_CONTENT_TYPE,
 			IJSFactorContants.JS_COMMENT, IJSFactorContants.JS_KEYWORD,
@@ -22,5 +23,4 @@ public interface IJSFactorContants {
 			"import", "new", "this", "void", "case", "default", "else",
 			"function", "in", "return", "typeof", "while", "comment", "delete",
 			"export", "if", "label", "switch", "var", "with" };
-	String JS_VARIABLE = "JS_VARIABLE";
 }

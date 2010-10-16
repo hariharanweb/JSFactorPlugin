@@ -23,6 +23,7 @@ public class JSRules extends RuleBasedScanner {
 		myRuleList.add(IJSRules.MULTI_LINE_COMMENT_RULE);
 		
 		myRuleList.add(IJSRules.SINGLE_LINE_VARIABLE_RULE);
+		myRuleList.add(new TestMyRule());
 		
 		IRule[] ruleArray = new IRule[myRuleList.size()];
 		setRules(myRuleList.toArray(ruleArray));

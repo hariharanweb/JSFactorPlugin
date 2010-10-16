@@ -63,4 +63,10 @@ public class JSFunction implements IJSObject{
 		JSFunction jsFunction = new JSFunction(functionName, parameterList, offset, length);
 		return jsFunction;
 	}
+
+	public static JSFunction getJSFunctionFromVariable(String content,
+			int tokenOffset, int tokenLength) {
+		System.out.println("hello "+content);
+		return new JSFunction("test", new ArrayList<String>(), 0, 0);
+	}
 }

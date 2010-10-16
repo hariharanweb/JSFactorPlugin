@@ -1,5 +1,6 @@
 package hari.jsfactor.jsobjects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JSVariable implements IJSObject{
@@ -21,9 +22,21 @@ public class JSVariable implements IJSObject{
 	public void addContainingObjects(IJSObject jsObject) {
 	}
 
-	public static JSVariable getJSVariable(String content, int offset, int length){
+	public static IJSObject getJSVariable(String content, int offset, int length){
 		String[] split = content.split("var ", 0);
 		String[] nameValue = split[1].split("=");
+
+		if(content.contains("function")){
+			String parameters = nameValue[1].replace("function(", "");
+			parameters = parameters.replaceAll("[)]\\s*[{]", "");
+			String[] parameterArray = parameters.split(",");
+			List<String> parameterList = new ArrayList<String>();
+			for (String parameter : parameterArray) {
+				parameterList.add(parameter.trim());
+			}
+			return new JSFunction(nameValue[0].trim(), parameterList, offset, length);			
+		}
+		
 		return new JSVariable(nameValue[0].trim(), nameValue[1].replace(";", "").trim());
 	}
 

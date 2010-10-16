@@ -8,7 +8,6 @@ import hari.jsfactor.jsobjects.JSVariable;
 import hari.jsfactor.ui.contants.IJSFactorTokens;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 import org.eclipse.jface.text.BadLocationException;
@@ -55,12 +54,14 @@ public class JSDocumentScanner {
 					programStack.push(previousAssignableJSObject);
 				}
 				if(nextToken.equals(IJSFactorTokens.JS_SINGLE_LINE_VARIABLE_TOKEN)){
-					JSVariable jsVariable = JSVariable.getJSVariable(content,rules.getTokenOffset(), rules.getTokenLength());
+					IJSObject jsVariable = JSVariable.getJSVariable(content,rules.getTokenOffset(), rules.getTokenLength());
 					previousAssignableJSObject.addContainingObjects(jsVariable);
+					if(jsVariable instanceof JSFunction){
+						functionList.add((JSFunction) jsVariable);
+						previousAssignableJSObject = jsVariable;
+					}
 				}
-				else if(nextToken.equals(JSRules.TOKEN)){
-					System.out.println(content);
-				}
+				
 				nextToken = rules.nextToken();
 			}
 		} catch (BadLocationException e) {

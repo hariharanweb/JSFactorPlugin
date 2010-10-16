@@ -5,8 +5,6 @@ import hari.jsfactor.ui.contants.IJSFactorContants;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.jface.text.contentassist.ContentAssistant;
-import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
