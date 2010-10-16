@@ -4,6 +4,7 @@ import hari.jsfactor.jsobjects.IJSObject;
 import hari.jsfactor.jsobjects.JSComment;
 import hari.jsfactor.jsobjects.JSFile;
 import hari.jsfactor.jsobjects.JSFunction;
+import hari.jsfactor.jsobjects.JSVariable;
 import hari.jsfactor.ui.contants.IJSFactorTokens;
 
 import java.util.ArrayList;
@@ -39,19 +40,13 @@ public class JSDocumentScanner {
 
 		try {
 			while (!nextToken.isEOF()) {
+				String content = getContent(document);
 				if (nextToken.equals(IJSFactorTokens.COMMENT_TOKEN)) {
-					String content = document.get(rules.getTokenOffset(),
-							rules.getTokenLength());
 					JSComment comment = new JSComment(content);
 					programStack.lastElement().addContainingObjects(comment);
 				}
 				if (nextToken.equals(IJSFactorTokens.JS_FUNCTION_TOKEN)) {
-					int tokenOffset = rules.getTokenOffset();
-					int tokenLength = rules.getTokenLength();
-					
-					String content = document.get(tokenOffset,
-							tokenLength);
-					JSFunction function = getFunctionDefinition(content, tokenOffset, tokenLength);
+					JSFunction function = JSFunction.getJSFunction(content, rules.getTokenOffset(), rules.getTokenLength());
 					programStack.lastElement().addContainingObjects(function);
 					functionList.add(function);
 					previousAssignableJSObject = function;
@@ -59,7 +54,13 @@ public class JSDocumentScanner {
 				if(nextToken.equals(IJSFactorTokens.OPEN_CURLY_BRACES_TOKEN)){
 					programStack.push(previousAssignableJSObject);
 				}
-				
+				if(nextToken.equals(IJSFactorTokens.JS_SINGLE_LINE_VARIABLE_TOKEN)){
+					JSVariable jsVariable = JSVariable.getJSVariable(content,rules.getTokenOffset(), rules.getTokenLength());
+					previousAssignableJSObject.addContainingObjects(jsVariable);
+				}
+				else if(nextToken.equals(JSRules.TOKEN)){
+					System.out.println(content);
+				}
 				nextToken = rules.nextToken();
 			}
 		} catch (BadLocationException e) {
@@ -68,21 +69,9 @@ public class JSDocumentScanner {
 
 	}
 
-	protected JSFunction getFunctionDefinition(String content, int offset, int length) {
-		String parameters = content.substring(content.indexOf("("));
-		String commaSeparatedParamters = parameters.replace("(", "")
-				.replace(")", "").trim();
-		List<String> parameterList = new ArrayList<String>();
-		if (commaSeparatedParamters.length() > 0) {
-			String[] individualParameters = commaSeparatedParamters.split(",");
-			for (String parameter : individualParameters) {
-				parameterList.add(parameter.trim());
-			}
-		}
-		String functionName = content.replace("function", "")
-				.replace(parameters, "").trim();
-		JSFunction jsFunction = new JSFunction(functionName, parameterList, offset, length);
-		return jsFunction;
+	private String getContent(IDocument document) throws BadLocationException {
+		return document.get(rules.getTokenOffset(),
+				rules.getTokenLength());
 	}
 
 	public JSFile getJSFile() {

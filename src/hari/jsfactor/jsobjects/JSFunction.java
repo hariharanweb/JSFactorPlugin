@@ -46,4 +46,21 @@ public class JSFunction implements IJSObject{
 	public int getOffset() {
 		return offset;
 	}
+
+	public static JSFunction getJSFunction(String content, int offset, int length) {
+		String parameters = content.substring(content.indexOf("("));
+		String commaSeparatedParamters = parameters.replace("(", "")
+				.replace(")", "").trim();
+		List<String> parameterList = new ArrayList<String>();
+		if (commaSeparatedParamters.length() > 0) {
+			String[] individualParameters = commaSeparatedParamters.split(",");
+			for (String parameter : individualParameters) {
+				parameterList.add(parameter.trim());
+			}
+		}
+		String functionName = content.replace("function", "")
+				.replace(parameters, "").trim();
+		JSFunction jsFunction = new JSFunction(functionName, parameterList, offset, length);
+		return jsFunction;
+	}
 }

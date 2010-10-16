@@ -12,4 +12,6 @@ public interface IJSRules {
 	
 	IPredicateRule OPEN_CURLY_BRACES = new SingleLineRule("{", null, IJSFactorTokens.OPEN_CURLY_BRACES_TOKEN);
 	IPredicateRule FUNCTION_RULE = new MultiLineRule("function", ")", IJSFactorTokens.JS_FUNCTION_TOKEN);
+	
+	IPredicateRule SINGLE_LINE_VARIABLE_RULE = new SingleLineRule("var", ";", IJSFactorTokens.JS_SINGLE_LINE_VARIABLE_TOKEN);
 }

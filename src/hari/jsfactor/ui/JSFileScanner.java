@@ -23,8 +23,8 @@ public class JSFileScanner extends RuleBasedPartitionScanner {
 		jsRules.add(IJSRules.SINGLE_LINE_COMMENT_RULE);
 		jsRules.add(IJSRules.MULTI_LINE_COMMENT_RULE);
 
-		jsRules.add(jsKeywordPredictor);
 		jsRules.add(jsOperatorPredictor);
+		jsRules.add(jsKeywordPredictor);
 
 		IPredicateRule[] rules = new IPredicateRule[jsRules.size()];
 		

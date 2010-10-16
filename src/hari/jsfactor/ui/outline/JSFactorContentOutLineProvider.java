@@ -25,7 +25,6 @@ public class JSFactorContentOutLineProvider implements ITreeContentProvider {
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if(newInput!=null){
-			System.out.println("Document changed "+newInput);
 			IDocument document = (IDocument) newInput;
 			scanner.updateModel(document);
 		}
@@ -33,7 +32,6 @@ public class JSFactorContentOutLineProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		System.out.println("Get elements"+inputElement);
 		JSFile jsFile = scanner.getJSFile();
 		return new IJSObject[]{jsFile};
 	}
@@ -41,7 +39,6 @@ public class JSFactorContentOutLineProvider implements ITreeContentProvider {
 	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof JSFile) {
-			System.out.println("Inside "+parentElement);
 			return scanner.getJSFunctions();
 		}
 		return null;

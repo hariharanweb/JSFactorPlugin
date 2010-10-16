@@ -30,7 +30,6 @@ public class JSFactorLabelProvider implements ILabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		System.out.println("display "+element);
 		return element.toString();
 	}
 

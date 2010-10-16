@@ -10,4 +10,5 @@ public interface IJSFactorTokens {
 	Token JS_OPERATOR_TOKEN = new Token(IJSFactorContants.JS_OPERATOR);
 	Token JS_FUNCTION_TOKEN = new Token(IJSFactorContants.JS_FUNCTION);
 	IToken OPEN_CURLY_BRACES_TOKEN = new Token(IJSFactorContants.JS_OPEN_CURLY_BRACES);
+	IToken JS_SINGLE_LINE_VARIABLE_TOKEN = new Token(IJSFactorContants.JS_VARIABLE);
 }

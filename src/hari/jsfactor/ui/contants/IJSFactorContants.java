@@ -22,4 +22,5 @@ public interface IJSFactorContants {
 			"import", "new", "this", "void", "case", "default", "else",
 			"function", "in", "return", "typeof", "while", "comment", "delete",
 			"export", "if", "label", "switch", "var", "with" };
+	String JS_VARIABLE = "JS_VARIABLE";
 }
