@@ -38,30 +38,45 @@ public class JSDocumentScanner {
 		IJSObject previousAssignableJSObject = jsFile;
 
 		try {
+			String sequenceToFind = "";
+
 			while (!nextToken.isEOF()) {
 				String content = getContent(document);
 				if (nextToken.equals(IJSFactorTokens.COMMENT_TOKEN)) {
+					sequenceToFind = "";
 					JSComment comment = new JSComment(content);
 					programStack.lastElement().addContainingObjects(comment);
-				}
-				if (nextToken.equals(IJSFactorTokens.JS_FUNCTION_TOKEN)) {
-					JSFunction function = JSFunction.getJSFunction(content, rules.getTokenOffset(), rules.getTokenLength());
+				} else if (nextToken.equals(IJSFactorTokens.JS_FUNCTION_TOKEN)) {
+					sequenceToFind = "";
+					JSFunction function = JSFunction.getJSFunction(content,
+							rules.getTokenOffset(), rules.getTokenLength());
 					programStack.lastElement().addContainingObjects(function);
 					functionList.add(function);
 					previousAssignableJSObject = function;
-				}
-				if(nextToken.equals(IJSFactorTokens.OPEN_CURLY_BRACES_TOKEN)){
+				} else if (nextToken
+						.equals(IJSFactorTokens.OPEN_CURLY_BRACES_TOKEN)) {
+					sequenceToFind = "";
 					programStack.push(previousAssignableJSObject);
-				}
-				if(nextToken.equals(IJSFactorTokens.JS_SINGLE_LINE_VARIABLE_TOKEN)){
-					IJSObject jsVariable = JSVariable.getJSVariable(content,rules.getTokenOffset(), rules.getTokenLength());
+				} else if (nextToken
+						.equals(IJSFactorTokens.JS_SINGLE_LINE_VARIABLE_TOKEN)) {
+					sequenceToFind = "";
+					IJSObject jsVariable = JSVariable.getJSVariable(content,
+							rules.getTokenOffset(), rules.getTokenLength());
 					previousAssignableJSObject.addContainingObjects(jsVariable);
-					if(jsVariable instanceof JSFunction){
+					if (jsVariable instanceof JSFunction) {
 						functionList.add((JSFunction) jsVariable);
 						previousAssignableJSObject = jsVariable;
 					}
+				} else {
+					sequenceToFind = sequenceToFind + content;
+					if(content.equals("\n") || content.equals(";"))
+						sequenceToFind = "";
+					if(content.equals("(")){
+						findAndAddForFunctionUsage(sequenceToFind,rules.getTokenOffset());
+						sequenceToFind = "";
+					}
 				}
-				
+
 				nextToken = rules.nextToken();
 			}
 		} catch (BadLocationException e) {
@@ -70,9 +85,18 @@ public class JSDocumentScanner {
 
 	}
 
+	private void findAndAddForFunctionUsage(String sequenceToFind, int offset) {
+		String functionName = sequenceToFind.substring(0, sequenceToFind.length()-1);
+		for (JSFunction function : functionList) {
+			if(function.getFunctionName().equals(functionName.trim())){
+				function.addUsage(offset - functionName.length());
+			}
+		}
+		
+	}
+
 	private String getContent(IDocument document) throws BadLocationException {
-		return document.get(rules.getTokenOffset(),
-				rules.getTokenLength());
+		return document.get(rules.getTokenOffset(), rules.getTokenLength());
 	}
 
 	public JSFile getJSFile() {

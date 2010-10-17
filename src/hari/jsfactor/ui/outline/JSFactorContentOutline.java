@@ -2,6 +2,7 @@ package hari.jsfactor.ui.outline;
 
 import hari.jsfactor.jsobjects.IJSObject;
 import hari.jsfactor.jsobjects.JSFunction;
+import hari.jsfactor.scanner.JSDocumentScanner;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ISelection;
@@ -16,9 +17,11 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 public class JSFactorContentOutline extends ContentOutlinePage {
 	private TreeViewer treeViewer;
 	private final ITextEditor editor;
+	private final JSDocumentScanner scanner;
 
-	public JSFactorContentOutline(ITextEditor editor) {
+	public JSFactorContentOutline(ITextEditor editor, JSDocumentScanner scanner) {
 		this.editor = editor;
+		this.scanner = scanner;
 	}
 
 	public void setInput(IDocument document) {
@@ -30,7 +33,7 @@ public class JSFactorContentOutline extends ContentOutlinePage {
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		treeViewer = getTreeViewer();
-		JSFactorContentOutLineProvider contentOutlineProvider = new JSFactorContentOutLineProvider();
+		JSFactorContentOutLineProvider contentOutlineProvider = new JSFactorContentOutLineProvider(scanner);
 		treeViewer.setContentProvider(contentOutlineProvider);
 		treeViewer.setLabelProvider(new JSFactorLabelProvider());
 	}

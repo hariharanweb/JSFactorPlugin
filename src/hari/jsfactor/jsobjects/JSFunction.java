@@ -5,6 +5,7 @@ import java.util.List;
 
 public class JSFunction implements IJSObject{
 	private List<IJSObject> containingObjects;
+	private List<Integer> usages;
 	private List<String> parameters;
 	private String functionName;
 	private final int length;
@@ -16,6 +17,8 @@ public class JSFunction implements IJSObject{
 		this.offset = offset;
 		this.length = length;
 		containingObjects = new ArrayList<IJSObject>();
+		usages = new ArrayList<Integer>();
+		
 	}
 
 	public void addContainingObjects(IJSObject jsObject){
@@ -64,9 +67,11 @@ public class JSFunction implements IJSObject{
 		return jsFunction;
 	}
 
-	public static JSFunction getJSFunctionFromVariable(String content,
-			int tokenOffset, int tokenLength) {
-		System.out.println("hello "+content);
-		return new JSFunction("test", new ArrayList<String>(), 0, 0);
+	public void addUsage(int usageOffset) {
+		usages.add(usageOffset);
+	}
+	
+	public List<Integer> getUsages(){
+		return usages;
 	}
 }

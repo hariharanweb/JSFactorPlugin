@@ -13,8 +13,8 @@ public class JSFactorContentOutLineProvider implements ITreeContentProvider {
 
 	private JSDocumentScanner scanner;
 
-	public JSFactorContentOutLineProvider() {
-		scanner = new JSDocumentScanner();
+	public JSFactorContentOutLineProvider(JSDocumentScanner scanner) {
+		this.scanner = scanner;
 	}
 	
 	@Override
