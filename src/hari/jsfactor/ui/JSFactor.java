@@ -13,10 +13,10 @@ public class JSFactor extends TextEditor {
 	private JSDocumentScanner scanner;
 
 	public JSFactor() {
-		JSFactorSourceViewConfiguration configuration = new JSFactorSourceViewConfiguration();
+		scanner = new JSDocumentScanner();
+		JSFactorSourceViewConfiguration configuration = new JSFactorSourceViewConfiguration(scanner);
 		setSourceViewerConfiguration(configuration);
 		setDocumentProvider(new JSFactorDocumentProvider());
-		scanner = new JSDocumentScanner();
 	}
 	
 	@Override
@@ -39,5 +39,9 @@ public class JSFactor extends TextEditor {
 		
 		if(outlinePage!=null)
 			outlinePage.update(document);
+	}
+
+	public JSDocumentScanner getScanner() {
+		return scanner;
 	}
 }

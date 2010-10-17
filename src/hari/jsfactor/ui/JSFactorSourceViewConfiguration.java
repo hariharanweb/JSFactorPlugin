@@ -1,5 +1,6 @@
 package hari.jsfactor.ui;
 
+import hari.jsfactor.scanner.JSDocumentScanner;
 import hari.jsfactor.ui.contants.IJSColorConstants;
 import hari.jsfactor.ui.contants.IJSFactorContants;
 
@@ -17,6 +18,11 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 public class JSFactorSourceViewConfiguration extends SourceViewerConfiguration {
 
 	private DefaultTagScanner defaultTagScanner;
+	private final JSDocumentScanner scanner;
+
+	public JSFactorSourceViewConfiguration(JSDocumentScanner scanner) {
+		this.scanner = scanner;
+	}
 
 	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
@@ -62,11 +68,12 @@ public class JSFactorSourceViewConfiguration extends SourceViewerConfiguration {
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 		ContentAssistant assistant = new ContentAssistant();
-		assistant.setContentAssistProcessor(new MyAssistant(), "");
+		assistant.setContentAssistProcessor(new JSContentAssiter(scanner), "__dftl_partition_content_type");
 		assistant.enableAutoActivation(true);
         assistant.setAutoActivationDelay(500);
         assistant.setProposalPopupOrientation(IContentAssistant.CONTEXT_INFO_BELOW);
         assistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_BELOW);
 		return assistant;
 	}
+	
 }
