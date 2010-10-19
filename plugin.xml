@@ -39,5 +39,20 @@
             commandId="hari.jsfactor.ui.action.RenameAction">
       </handler>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.menus">
+		<menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+            <menu
+               label="JSFactor"               
+               id="hari.jsfactor.ui.menus.jsfactor">
+	            <command
+	                  commandId="hari.jsfactor.ui.action.RenameAction"	                  
+	                  id="hari.jsfactor.ui.menu.action.RenameAction">
+	            </command>
+         	</menu>
+		</menuContribution>
+   </extension>
 
 </plugin>
