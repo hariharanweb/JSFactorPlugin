@@ -23,13 +23,23 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+F2">
       </key>
+      
+      <key
+            commandId="hari.jsfactor.ui.action.ExtractMethodAction"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+F3">
+      </key>
    </extension>
    
    <extension
          point="org.eclipse.ui.commands">
       <command
             id="hari.jsfactor.ui.action.RenameAction"
-            name="RenameAction">
+            name="Rename Function/Variables">
+      </command>
+      <command
+            id="hari.jsfactor.ui.action.ExtractMethodAction"
+            name="Extract MethodAction">
       </command>
    </extension>
    <extension
@@ -37,6 +47,10 @@
       <handler
             class="hari.jsfactor.ui.action.RenameAction"
             commandId="hari.jsfactor.ui.action.RenameAction">
+      </handler>
+      <handler
+            class="hari.jsfactor.ui.action.ExtractMethodAction"
+            commandId="hari.jsfactor.ui.action.ExtractMethodAction">
       </handler>
    </extension>
    
@@ -50,6 +64,10 @@
 	            <command
 	                  commandId="hari.jsfactor.ui.action.RenameAction"	                  
 	                  id="hari.jsfactor.ui.menu.action.RenameAction">
+	            </command>
+	            <command
+	                  commandId="hari.jsfactor.ui.action.ExtractMethodAction"	                  
+	                  id="hari.jsfactor.ui.action.ExtractMethodAction">
 	            </command>
          	</menu>
 		</menuContribution>
