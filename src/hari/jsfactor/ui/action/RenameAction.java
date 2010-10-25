@@ -1,10 +1,10 @@
 package hari.jsfactor.ui.action;
 
-import java.util.List;
-
 import hari.jsfactor.jsobjects.JSFunction;
 import hari.jsfactor.scanner.JSDocumentScanner;
 import hari.jsfactor.ui.JSFactor;
+
+import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -15,7 +15,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
