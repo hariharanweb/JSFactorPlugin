@@ -25,12 +25,19 @@ public class JSFactor extends TextEditor {
 			if(outlinePage == null){
 				IDocument document = getDocumentProvider().getDocument(getEditorInput());
 				outlinePage = new JSFactorContentOutline(this,scanner);
-				if(document != null)
+				if(document != null){
 					outlinePage.setInput(document);
+					outlinePage.update(document);
+				}
 			}
 			return outlinePage;
 		}
 		return super.getAdapter(adapter);
+	}
+	
+	@Override
+	protected boolean isLineNumberRulerVisible() {
+		return true;
 	}
 	
 	@Override
