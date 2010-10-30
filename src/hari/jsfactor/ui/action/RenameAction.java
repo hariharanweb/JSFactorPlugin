@@ -4,6 +4,7 @@ import hari.jsfactor.jsobjects.JSFunction;
 import hari.jsfactor.scanner.JSDocumentScanner;
 import hari.jsfactor.ui.JSFactor;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -54,15 +55,20 @@ public class RenameAction extends AbstractHandler {
 		List<Integer> usages = functionToRenameFunction.getUsages();
 		IDocument document = jsFactor.getDocumentProvider().getDocument(
 				jsFactor.getEditorInput());
-		try {
-			document.replace(functionToRenameFunction.getOffset()+"function ".length(),
-					newName.length(), newName);
-
-			for (Integer offset : usages) {
-				document.replace(offset, newName.length(), newName);
+		
+		if(!selectedText.equals(newName)){
+			try {
+				
+				for(int i=usages.size()-1;i>=0;i--)
+				{
+					document.replace(usages.get(i), functionToRenameFunction.getFunctionName().length(), newName);
+				}
+				
+				document.replace(functionToRenameFunction.getOffset()+"function ".length(),
+						selectedText.length(), newName);
+			} catch (BadLocationException e1) {
+				e1.printStackTrace();
 			}
-		} catch (BadLocationException e1) {
-			e1.printStackTrace();
 		}
 		return null;
 	}

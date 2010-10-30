@@ -69,10 +69,11 @@ public class JSDocumentScanner {
 					}
 				} else {
 					sequenceToFind = sequenceToFind + content;
-					if(content.equals("\n") || content.equals(";"))
+					if(content.equals("\n") || content.equals(";") || content.equals(" ") || content.equals("\t") || content.trim().length() == 0)
 						sequenceToFind = "";
+					
 					if(content.equals("(")){
-						findAndAddForFunctionUsage(sequenceToFind,rules.getTokenOffset());
+						findAndAddForFunctionUsage(sequenceToFind,rules.getTokenOffset(),document);
 						sequenceToFind = "";
 					}
 				}
@@ -85,11 +86,12 @@ public class JSDocumentScanner {
 
 	}
 
-	private void findAndAddForFunctionUsage(String sequenceToFind, int offset) {
+	private void findAndAddForFunctionUsage(String sequenceToFind, int offset, IDocument document) {
 		String functionName = sequenceToFind.substring(0, sequenceToFind.length()-1);
 		for (JSFunction function : functionList) {
 			if(function.getFunctionName().equals(functionName.trim())){
-				function.addUsage(offset - functionName.length());
+				int usageOffset = offset - functionName.trim().length();
+				function.addUsage(usageOffset);
 			}
 		}
 		
