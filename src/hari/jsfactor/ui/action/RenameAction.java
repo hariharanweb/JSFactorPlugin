@@ -5,7 +5,6 @@ import hari.jsfactor.jsobjects.JSVariable;
 import hari.jsfactor.scanner.JSDocumentScanner;
 import hari.jsfactor.ui.JSFactor;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
