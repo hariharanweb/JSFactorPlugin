@@ -20,6 +20,7 @@ public class JSDocumentScanner {
 	private JSFile jsFile;
 	private Stack<IJSObject> programStack;
 	private ArrayList<JSFunction> functionList;
+	private ArrayList<JSVariable> variableList;
 
 	public JSDocumentScanner() {
 		rules = new JSRules();
@@ -29,6 +30,7 @@ public class JSDocumentScanner {
 
 		jsFile = new JSFile();
 		functionList = new ArrayList<JSFunction>();
+		variableList = new ArrayList<JSVariable>();
 		programStack = new Stack<IJSObject>();
 		programStack.push(jsFile);
 
@@ -39,9 +41,9 @@ public class JSDocumentScanner {
 
 		try {
 			String sequenceToFind = "";
-
 			while (!nextToken.isEOF()) {
 				String content = getContent(document);
+
 				if (nextToken.equals(IJSFactorTokens.COMMENT_TOKEN)) {
 					sequenceToFind = "";
 					JSComment comment = new JSComment(content);
@@ -66,15 +68,30 @@ public class JSDocumentScanner {
 					if (jsVariable instanceof JSFunction) {
 						functionList.add((JSFunction) jsVariable);
 						previousAssignableJSObject = jsVariable;
+					} else {
+						variableList.add((JSVariable) jsVariable);
 					}
 				} else {
 					sequenceToFind = sequenceToFind + content;
-					if(content.equals("\n") || content.equals(";") || content.equals(" ") || content.equals("\t") || content.trim().length() == 0)
+					if (content.equals("\n") || content.equals(";")
+							|| content.equals(" ") || content.equals("\t")
+							|| content.trim().length() == 0)
+					{
 						sequenceToFind = "";
+						nextToken = rules.nextToken();
+						continue;
+					}
 					
-					if(content.equals("(")){
-						findAndAddForFunctionUsage(sequenceToFind,rules.getTokenOffset(),document);
-						sequenceToFind = "";
+					
+					if (content.equals("(")) {
+						boolean foundFunctionUsage = findAndAddForFunctionUsage(
+								sequenceToFind, rules.getTokenOffset());
+
+						if(foundFunctionUsage)  sequenceToFind = "";
+					} else {
+						boolean foundVariableUsage = findAndAddVariableUsage(sequenceToFind,
+								rules.getTokenOffset());
+						if(foundVariableUsage) sequenceToFind ="";
 					}
 				}
 
@@ -86,15 +103,32 @@ public class JSDocumentScanner {
 
 	}
 
-	private void findAndAddForFunctionUsage(String sequenceToFind, int offset, IDocument document) {
-		String functionName = sequenceToFind.substring(0, sequenceToFind.length()-1);
-		for (JSFunction function : functionList) {
-			if(function.getFunctionName().equals(functionName.trim())){
-				int usageOffset = offset - functionName.trim().length();
-				function.addUsage(usageOffset);
+	private boolean findAndAddVariableUsage(String sequenceToFind, int offset) {
+		boolean found = false;
+		String variableName = sequenceToFind.substring(0,
+				sequenceToFind.length());
+		for (JSVariable variable : variableList) {
+			if (variable.getVariableName().equals(variableName.trim())) {
+				int usageOffset = offset - variableName.trim().length();
+				variable.addUsage(usageOffset);
+				found = true; 
 			}
 		}
-		
+		return found;
+	}
+
+	private boolean findAndAddForFunctionUsage(String sequenceToFind, int offset) {
+		boolean found = false;
+		String functionName = sequenceToFind.substring(0,
+				sequenceToFind.length() - 1);
+		for (JSFunction function : functionList) {
+			if (function.getFunctionName().equals(functionName.trim())) {
+				int usageOffset = offset - functionName.trim().length();
+				function.addUsage(usageOffset);
+				found = true;
+			}
+		}
+		return found;
 	}
 
 	private String getContent(IDocument document) throws BadLocationException {
@@ -108,5 +142,10 @@ public class JSDocumentScanner {
 	public JSFunction[] getJSFunctions() {
 		JSFunction[] functions = new JSFunction[functionList.size()];
 		return functionList.toArray(functions);
+	}
+
+	public JSVariable[] getJSVariables() {
+		JSVariable[] variables = new JSVariable[variableList.size()];
+		return variableList.toArray(variables);
 	}
 }

@@ -7,10 +7,14 @@ public class JSVariable implements IJSObject{
 	
 	private final String variableName;
 	private final String variableValue;
+	private ArrayList<Integer> usages;
+	private final int offset;
 
-	public JSVariable(String variableName,String variableValue) {
+	public JSVariable(String variableName,String variableValue, int offset) {
 		this.variableName = variableName;
 		this.variableValue = variableValue;
+		this.offset = offset;
+		usages = new ArrayList<Integer>();
 	}
 	
 	@Override
@@ -37,7 +41,7 @@ public class JSVariable implements IJSObject{
 			return new JSFunction(nameValue[0].trim(), parameterList, offset, length);			
 		}
 		
-		return new JSVariable(nameValue[0].trim(), nameValue[1].replace(";", "").trim());
+		return new JSVariable(nameValue[0].trim(), nameValue[1].replace(";", "").trim(),offset);
 	}
 
 	public String getVariableName() {
@@ -46,5 +50,17 @@ public class JSVariable implements IJSObject{
 	
 	public String getVariableValue() {
 		return variableValue;
+	}
+
+	public void addUsage(int usageOffset) {
+		usages.add(usageOffset);
+	}
+
+	public List<Integer> getUsages() {
+		return usages;
+	}
+
+	public int getOffset() {
+		return offset;
 	}
 }

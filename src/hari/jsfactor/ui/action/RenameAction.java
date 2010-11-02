@@ -1,6 +1,7 @@
 package hari.jsfactor.ui.action;
 
 import hari.jsfactor.jsobjects.JSFunction;
+import hari.jsfactor.jsobjects.JSVariable;
 import hari.jsfactor.scanner.JSDocumentScanner;
 import hari.jsfactor.ui.JSFactor;
 
@@ -32,9 +33,59 @@ public class RenameAction extends AbstractHandler {
 			return null;
 		}
 		JSFactor jsFactor = (JSFactor) editor;
+		String selectedText = ((TextSelection) selection).getText();
+
+		if(!renameFunctionUsages(jsFactor, selectedText)){
+			renameVariableUsages(jsFactor, selectedText);
+		}
+		return null;
+	}
+
+	private void renameVariableUsages(JSFactor jsFactor, String selectedText) {
+		JSDocumentScanner scanner = jsFactor.getScanner();
+		JSVariable[] jsVariables = scanner.getJSVariables();
+		JSVariable variableToRename = null;
+		
+		for (JSVariable jsVariable : jsVariables) {
+			if(jsVariable.getVariableName().equals(selectedText)){
+				variableToRename = jsVariable;
+				break;
+			}
+		}
+		if (variableToRename == null) {
+			MessageDialog.openError(null, "Cannot perform the operation",
+					"Select a function to rename");
+			return;
+		}
+		
+		InputDialog inputDialog = new InputDialog(null, "Enter what to rename",
+				"Rename " + selectedText + " to ?", selectedText, null);
+		inputDialog.open();
+		String newName = inputDialog.getValue();
+		List<Integer> usages = variableToRename.getUsages();
+		IDocument document = jsFactor.getDocumentProvider().getDocument(
+				jsFactor.getEditorInput());
+		
+		if(!selectedText.equals(newName)){
+			try {
+				
+				for(int i=usages.size()-1;i>=0;i--)
+				{
+					document.replace(usages.get(i)+1, variableToRename.getVariableName().length(), newName);
+				}
+				
+				document.replace(variableToRename.getOffset()+"var ".length(),
+						selectedText.length(), newName);
+			} catch (BadLocationException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+
+	private boolean renameFunctionUsages(JSFactor jsFactor, String selectedText) {
 		JSDocumentScanner scanner = jsFactor.getScanner();
 		JSFunction[] jsFunctions = scanner.getJSFunctions();
-		String selectedText = ((TextSelection) selection).getText();
 		JSFunction functionToRenameFunction = null;
 		for (JSFunction jsFunction : jsFunctions) {
 			if (jsFunction.getFunctionName().equals(selectedText)) {
@@ -43,13 +94,11 @@ public class RenameAction extends AbstractHandler {
 			}
 		}
 		if (functionToRenameFunction == null) {
-			MessageDialog.openError(null, "Cannot perform the operation",
-					"Select a function to rename");
-			return null;
+			return false;
 		}
 
 		InputDialog inputDialog = new InputDialog(null, "Enter what to rename",
-				"Rename variable " + selectedText + " to ?", selectedText, null);
+				"Rename " + selectedText + " to ?", selectedText, null);
 		inputDialog.open();
 		String newName = inputDialog.getValue();
 		List<Integer> usages = functionToRenameFunction.getUsages();
@@ -70,6 +119,6 @@ public class RenameAction extends AbstractHandler {
 				e1.printStackTrace();
 			}
 		}
-		return null;
+		return true;
 	}
 }
