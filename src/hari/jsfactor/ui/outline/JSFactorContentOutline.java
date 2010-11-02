@@ -11,6 +11,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
@@ -19,6 +20,7 @@ public class JSFactorContentOutline extends ContentOutlinePage {
 	private final ITextEditor editor;
 	private final JSDocumentScanner scanner;
 
+	
 	public JSFactorContentOutline(ITextEditor editor, JSDocumentScanner scanner) {
 		this.editor = editor;
 		this.scanner = scanner;
@@ -36,6 +38,7 @@ public class JSFactorContentOutline extends ContentOutlinePage {
 		JSFactorContentOutLineProvider contentOutlineProvider = new JSFactorContentOutLineProvider(scanner);
 		treeViewer.setContentProvider(contentOutlineProvider);
 		treeViewer.setLabelProvider(new JSFactorLabelProvider());
+		update(editor.getDocumentProvider().getDocument(editor.getEditorInput()));
 	}
 
 	public void update(IDocument document) {
