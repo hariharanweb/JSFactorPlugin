@@ -18,33 +18,31 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 public class JSContentAssiter implements IContentAssistProcessor {
 
 	private final JSDocumentScanner scanner;
-	private ArrayList<String> keywordProposals;
 
 	public JSContentAssiter(JSDocumentScanner scanner) {
 		this.scanner = scanner;
-		keywordProposals = new ArrayList<String>();
-		String[] jsKeywords = IJSFactorContants.JS_KEYWORDS;
-		for (String keyword : jsKeywords) {
-			keywordProposals.add(keyword);
-		}		
 	}
 
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
 		
-		List<String> completionProposals = new ArrayList<String>();
-		completionProposals.addAll(keywordProposals);
+		List<CompletionProposal> proposalList = new ArrayList<CompletionProposal>();
+		
 		JSFunction[] jsFunctions = scanner.getJSFunctions();
 		for (JSFunction function : jsFunctions) {
-			completionProposals.add(function.getFunctionName());
+			proposalList.add(new CompletionProposal(function.getFunctionName(), offset, 0, 0));
 		}
 		
-		Collections.sort(completionProposals);
-		ArrayList<CompletionProposal> proposalList = new ArrayList<CompletionProposal>();
-		for (String proposal : completionProposals) {
-			proposalList.add(new CompletionProposal(proposal, offset, 0, 0));
-		}
+		String[] jsKeywords = IJSFactorContants.JS_KEYWORDS;
+		for (String keyword : jsKeywords) {
+			if(JSKeywordContentAssist.keywordsContentAssistant.containsKey(keyword)){
+				String content = JSKeywordContentAssist.keywordsContentAssistant.get(keyword);
+				proposalList.add(new CompletionProposal(content, offset, 0, content.length(), null, keyword, null, null));
+			}else{
+				proposalList.add(new CompletionProposal(keyword, offset, 0, keyword.length()));
+			}
+		}	
 		return proposalList.toArray(new CompletionProposal[proposalList.size()]);
 	}
 
